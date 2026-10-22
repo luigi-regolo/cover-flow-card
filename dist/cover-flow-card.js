@@ -13,8 +13,6 @@
   const THEMES = ['auto', 'light', 'dark'];
   const MAX_COVERS = 24;
   const ENTITY_PATTERN = /^cover\.[a-z0-9_]+$/;
-  const ICON_PATTERN = /^mdi:[a-z0-9-]{2,70}$/;
-  const iconName = (value, fallback = 'mdi:window-shutter') => ICON_PATTERN.test(String(value || '')) ? String(value) : fallback;
 
   function escapeHtml(value) {
     return String(value ?? '').replace(/[&<>"']/g, char => ({
@@ -37,8 +35,7 @@
         throw new Error('Cover Flow Card: invalid or duplicate cover entity.');
       }
       seen.add(entity);
-      return { entity, name: String(typeof item === 'string' ? '' : (item?.name ?? '')).trim().slice(0, 70),
-        icon: iconName(typeof item === 'string' ? '' : item?.icon, '') };
+      return { entity, name: String(typeof item === 'string' ? '' : (item?.name ?? '')).trim().slice(0, 70) };
     });
     return {
       entities,
@@ -90,12 +87,10 @@
     .cf-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,370px),1fr));gap:12px;align-items:start;min-width:0}
     .cf-cell{container-type:inline-size;min-width:0;width:100%}
     .cf-shell{border:1px solid var(--cf-line);border-radius:26px;background:var(--cf-bg);padding:21px;min-width:0;overflow:hidden}
-    .cf-eyebrow{font-size:10px;font-weight:750;letter-spacing:1.7px;color:var(--cf-muted);line-height:1.3;text-transform:uppercase;margin:1px 0 9px}
-    .cf-header{display:flex;justify-content:space-between;align-items:center;gap:11px;margin-bottom:20px}
+    .cf-header{min-width:0;margin:2px 4px 17px}
+    .cf-eyebrow{font-size:10px;font-weight:750;letter-spacing:1.7px;color:var(--cf-muted);line-height:1.1;text-transform:uppercase;margin:0 0 7px}
     .cf-title{font-size:25px;line-height:1.14;letter-spacing:-.7px;font-weight:780;min-width:0;overflow-wrap:anywhere}
     .cf-title b{color:var(--cf-accent);font:inherit}
-    .cf-orb{display:grid;place-items:center;flex:none;width:47px;height:47px;border-radius:50%;background:var(--cf-surface)}
-    .cf-icon{display:block;width:22px;height:22px;--mdc-icon-size:22px}
     .cf-well{border-radius:24px;background:var(--cf-surface);padding:19px;min-width:0}
     .cf-hero{display:flex;align-items:center;gap:24px;min-height:152px}
     .cf-window{position:relative;width:116px;height:147px;flex:none;overflow:hidden;border:5px solid var(--cf-bg);border-radius:13px;background:linear-gradient(155deg,#eef4e8 0%,var(--cf-graphic) 100%);box-shadow:0 1px 3px #00000010}
@@ -230,24 +225,17 @@
       const state = this._state(entity);
       const ready = this._ready(state);
       const pos = ready ? positionFromState(state) : null;
-      const title = item.name || state?.attributes?.friendly_name || entity;
+      const customizedSingleTitle = this._cfg.entities.length === 1 && this._cfg.title !== 'Tapparelle' ? this._cfg.title : '';
+      const title = item.name || customizedSingleTitle || state?.attributes?.friendly_name || entity;
       const busy = this._pending.has(entity);
       const sliderAvailable = ready && !busy && pos !== null && supported(state, FEATURES.SET_POSITION);
       const isDisabled = feature => !ready || !supported(state, feature) || (busy && feature !== FEATURES.STOP);
-      const allCommands = [FEATURES.OPEN, FEATURES.CLOSE, FEATURES.STOP].every(feature => supported(state, feature));
-      const message = placeholder ? 'Aggiungi una o più entità cover nell’editor visuale per iniziare.'
-        : ready && pos === null ? (allCommands
-          ? 'Posizione non fornita dal dispositivo. I comandi Apri, Stop e Chiudi restano disponibili.'
-          : 'Posizione non fornita dal dispositivo. Usa i comandi supportati.') : '';
+      const message = placeholder ? 'Aggiungi una o più entità cover nell’editor visuale per iniziare.' : '';
       const value = pos === null ? '—' : String(pos);
       const error = this._errors.get(entity) || '';
       const shownState = placeholder ? 'Nessuna tapparella configurata' : displayState(state, pos);
       return `<div class="cf-cell"><section class="cf-shell" data-entity="${escapeHtml(entity)}" aria-label="Controllo tapparella ${escapeHtml(title)}">
-          <div class="cf-eyebrow">${escapeHtml(this._cfg.eyebrow)}</div>
-          <div class="cf-header">
-            <div class="cf-title">${escapeHtml(title)}<b>.</b></div>
-            <div class="cf-orb" aria-hidden="true"><ha-icon class="cf-icon" icon="${escapeHtml(iconName(item.icon, iconName(state?.attributes?.icon)))}"></ha-icon></div>
-          </div>
+          <header class="cf-header"><div class="cf-eyebrow">${escapeHtml(this._cfg.eyebrow)}</div><div class="cf-title">${escapeHtml(title)}<b>.</b></div></header>
           <div class="cf-well">
             <div class="cf-hero">
               <div class="cf-window${pos === null ? ' unknown' : ''}" style="--cf-closed:${pos === null ? 0 : 100 - pos}%" aria-hidden="true"><div class="cf-shade"></div><div class="cf-window-bottom"></div></div>
@@ -415,12 +403,10 @@
     _cover(item, index) {
       const name = item.name || this._hass?.states?.[item.entity]?.attributes?.friendly_name || item.entity;
       const open = this._openId === item.entity || (this._openId === null && index === 0);
-      const configuredIcon = iconName(item.icon, iconName(this._hass?.states?.[item.entity]?.attributes?.icon));
       return `<details data-cover="${escapeHtml(item.entity)}" ${open ? 'open' : ''}>
         <summary>${escapeHtml(name)} <span class="cf-small">(${index + 1})</span></summary>
         <div class="cf-detailbody">
           <div class="cf-field"><label class="cf-label" for="cf-name-${index}">Nome visualizzato</label><input id="cf-name-${index}" class="cf-input" data-name="${escapeHtml(item.entity)}" maxlength="70" placeholder="Usa il nome Home Assistant" value="${escapeHtml(item.name)}"></div>
-          <div class="cf-field"><div class="cf-label">Icona MDI</div><div data-icon-slot="${escapeHtml(item.entity)}"></div><div class="cf-fallback"><input class="cf-input" data-icon="${escapeHtml(item.entity)}" value="${escapeHtml(configuredIcon)}" placeholder="mdi:window-shutter"></div></div>
           <div class="cf-panel"><div class="cf-label">Entità tapparella (1)</div>
             <div class="cf-item"><div class="cf-itemtext">${escapeHtml(name)}<div class="cf-id">${escapeHtml(item.entity)}</div></div><button type="button" class="cf-btn cf-remove" data-remove="${escapeHtml(item.entity)}" aria-label="Rimuovi ${escapeHtml(name)}" title="Rimuovi"><ha-icon icon="mdi:close"></ha-icon></button></div>
           </div>
@@ -440,8 +426,8 @@
           <div class="cf-fallback"><input class="cf-input" data-add type="text" placeholder="cover.nome_tapparella" spellcheck="false"></div>
         </div>`;
       if (this._tab === 'aspetto') body = `<div class="cf-heading">Aspetto Edera</div><div class="cf-desc">Stessa tipografia, spaziature e selezione del tema delle altre card Edera. Il nome di ogni tapparella si modifica nella scheda Tapparelle.</div>
-        <div class="cf-field"><label class="cf-label" for="cf-eyebrow">Intestazione superiore</label><input id="cf-eyebrow" class="cf-input" data-appearance="eyebrow" maxlength="60" value="${escapeHtml(this._cfg.eyebrow)}"></div>
         <div class="cf-field"><label class="cf-label" for="cf-title">Titolo</label><input id="cf-title" class="cf-input" data-appearance="title" maxlength="70" value="${escapeHtml(this._cfg.title)}"></div>
+        <div class="cf-field"><label class="cf-label" for="cf-eyebrow">Intestazione superiore</label><input id="cf-eyebrow" class="cf-input" data-appearance="eyebrow" maxlength="60" value="${escapeHtml(this._cfg.eyebrow)}"></div>
         <div class="cf-field"><label class="cf-label" for="cf-theme">Tema</label>
           <select id="cf-theme" class="cf-input cf-select" data-appearance="theme"><option value="auto" ${this._cfg.theme === 'auto' ? 'selected' : ''}>Automatico (Home Assistant)</option><option value="light" ${this._cfg.theme === 'light' ? 'selected' : ''}>Light Edera</option><option value="dark" ${this._cfg.theme === 'dark' ? 'selected' : ''}>Graphite Dark Edera</option></select></div>`;
       if (this._tab === 'avanzate') body = `<div class="cf-heading">Compatibilità e comandi</div>
@@ -451,22 +437,6 @@
       const editor = this.shadowRoot.querySelector('.cf-editor');
       const native = !!customElements.get('ha-selector');
       editor.classList.toggle('cf-no-native', !native);
-      if (native) this.shadowRoot.querySelectorAll('[data-icon-slot]').forEach(iconSlot => {
-        const id = iconSlot.dataset.iconSlot;
-        const item = this._cfg.entities.find(entry => entry.entity === id);
-        if (!item) return;
-        const selector = document.createElement('ha-selector');
-        selector.hass = this._hass;
-        selector.selector = { icon: {} };
-        selector.value = iconName(item.icon, iconName(this._hass?.states?.[id]?.attributes?.icon));
-        selector.addEventListener('value-changed', event => {
-          event.stopPropagation();
-          const icon = iconName(event.detail?.value);
-          this._openId = id;
-          this._save({ entities: this._cfg.entities.map(entry => entry.entity === id ? { ...entry, icon } : entry) });
-        });
-        iconSlot.appendChild(selector);
-      });
       const slot = this.shadowRoot.querySelector('[data-entity-slot]');
       if (native && slot && this._cfg.entities.length < MAX_COVERS) {
         const selector = document.createElement('ha-selector');
@@ -508,13 +478,6 @@
         const entities = this._cfg.entities.map(item => item.entity === input.dataset.name ? { ...item, name: input.value.trim() } : item);
         this._openId = input.dataset.name;
         this._save({ entities });
-        return;
-      }
-      if (input.dataset.icon !== undefined) {
-        const id = input.dataset.icon;
-        const icon = iconName(input.value);
-        this._openId = id;
-        this._save({ entities: this._cfg.entities.map(item => item.entity === id ? { ...item, icon } : item) });
         return;
       }
       if (input.dataset.appearance !== undefined) {
