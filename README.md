@@ -1,6 +1,7 @@
 # Cover Flow Card
 
 [![TikTok | Segui](assets/tiktok-segui.svg)](https://www.tiktok.com/@luigi.regolo)
+[![Release](https://img.shields.io/github/v/release/luigi-regolo/cover-flow-card?style=flat-square)](https://github.com/luigi-regolo/cover-flow-card/releases/latest)
 [![License: GPL-3.0-only](https://img.shields.io/badge/license-GPL--3.0--only-blue?style=flat-square)](LICENSE)
 [![HACS Repository](https://img.shields.io/badge/HACS-Repository-41BDF5?style=flat-square)](https://my.home-assistant.io/redirect/hacs_repository/?owner=luigi-regolo&repository=cover-flow-card&category=plugin)
 [![GitHub Stars](https://img.shields.io/github/stars/luigi-regolo/cover-flow-card?style=flat-square)](https://github.com/luigi-regolo/cover-flow-card/stargazers)
@@ -89,6 +90,11 @@ Position control requires the `SET_POSITION` feature and a valid `current_positi
 No specific minimum Home Assistant version has been independently verified.
 
 The card does not require installation of the Edera theme or additional frontend libraries. HACS is required only when using the HACS installation method.
+
+## Releases
+
+Official versions and release notes are available on
+[GitHub Releases](https://github.com/luigi-regolo/cover-flow-card/releases).
 
 ## Copyright & License
 
