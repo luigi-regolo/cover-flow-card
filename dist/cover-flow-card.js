@@ -39,7 +39,8 @@
     });
     return {
       entities,
-      eyebrow: String(config.eyebrow ?? 'CONTROLLO TAPPARELLA').trim().slice(0, 60),
+      // Keep the card's public name as the Edera eyebrow; migrate the original default.
+      eyebrow: String(config.eyebrow === 'CONTROLLO TAPPARELLA' ? 'COVER FLOW CARD' : (config.eyebrow ?? 'COVER FLOW CARD')).trim().slice(0, 60),
       title: String(config.title ?? 'Tapparelle').trim().slice(0, 70),
       theme: THEMES.includes(config.theme) ? config.theme : 'auto'
     };
