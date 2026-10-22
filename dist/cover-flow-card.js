@@ -13,6 +13,8 @@
   const THEMES = ['auto', 'light', 'dark'];
   const MAX_COVERS = 24;
   const ENTITY_PATTERN = /^cover\.[a-z0-9_]+$/;
+  const ICON_PATTERN = /^mdi:[a-z0-9-]{2,70}$/;
+  const iconName = (value, fallback = 'mdi:window-shutter') => ICON_PATTERN.test(String(value || '')) ? String(value) : fallback;
 
   function escapeHtml(value) {
     return String(value ?? '').replace(/[&<>"']/g, char => ({
@@ -35,11 +37,13 @@
         throw new Error('Cover Flow Card: invalid or duplicate cover entity.');
       }
       seen.add(entity);
-      return { entity, name: String(typeof item === 'string' ? '' : (item?.name ?? '')).trim().slice(0, 70) };
+      return { entity, name: String(typeof item === 'string' ? '' : (item?.name ?? '')).trim().slice(0, 70),
+        icon: iconName(typeof item === 'string' ? '' : item?.icon, '') };
     });
     return {
       entities,
       eyebrow: String(config.eyebrow ?? 'CONTROLLO TAPPARELLA').trim().slice(0, 60),
+      title: String(config.title ?? 'Tapparelle').trim().slice(0, 70),
       theme: THEMES.includes(config.theme) ? config.theme : 'auto'
     };
   }
@@ -60,7 +64,7 @@
     if (!state) return 'Entità non trovata';
     switch (state.state) {
       case 'unavailable': return 'Non disponibile';
-      case 'unknown': return 'Stato sconosciuto';
+      case 'unknown': return ''; // Position may be unknown while commands remain supported.
       case 'opening': return 'In apertura';
       case 'closing': return 'In chiusura';
       case 'closed': return 'Chiusa';
@@ -69,7 +73,7 @@
         if (position === 0) return 'Chiusa';
         if (position !== null) return 'Aperta parzialmente';
         return 'Aperta';
-      default: return 'Stato sconosciuto';
+      default: return '';
     }
   }
 
@@ -91,7 +95,7 @@
     .cf-title{font-size:25px;line-height:1.14;letter-spacing:-.7px;font-weight:780;min-width:0;overflow-wrap:anywhere}
     .cf-title b{color:var(--cf-accent);font:inherit}
     .cf-orb{display:grid;place-items:center;flex:none;width:47px;height:47px;border-radius:50%;background:var(--cf-surface)}
-    .cf-icon{display:block;width:22px;height:22px}
+    .cf-icon{display:block;width:22px;height:22px;--mdc-icon-size:22px}
     .cf-well{border-radius:24px;background:var(--cf-surface);padding:19px;min-width:0}
     .cf-hero{display:flex;align-items:center;gap:24px;min-height:152px}
     .cf-window{position:relative;width:116px;height:147px;flex:none;overflow:hidden;border:5px solid var(--cf-bg);border-radius:13px;background:linear-gradient(155deg,#eef4e8 0%,var(--cf-graphic) 100%);box-shadow:0 1px 3px #00000010}
@@ -109,7 +113,9 @@
     .cf-slider::-moz-range-progress{height:7px;border-radius:20px;background:var(--cf-accent)}
     .cf-slider::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;margin-top:-7.5px;background:var(--cf-accent);border:4px solid var(--cf-bg);box-shadow:0 1px 5px #0004;border-radius:50%}
     .cf-slider::-moz-range-thumb{width:14px;height:14px;border:4px solid var(--cf-bg);background:var(--cf-accent);box-shadow:0 1px 5px #0004;border-radius:50%}
-    .cf-slider:disabled{cursor:not-allowed;opacity:.45}
+    .cf-slider:disabled{cursor:not-allowed;opacity:.55}
+    .cf-slider:disabled::-webkit-slider-thumb{background:var(--cf-muted);box-shadow:none}
+    .cf-slider:disabled::-moz-range-thumb{background:var(--cf-muted);box-shadow:none}
     .cf-slider:focus-visible,.cf-actions button:focus-visible{outline:2px solid var(--cf-accent);outline-offset:2px}
     .cf-ends{display:flex;justify-content:space-between;gap:8px;color:var(--cf-muted);font-size:10px;line-height:1.3;margin-top:2px}
     .cf-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}
@@ -137,7 +143,8 @@
     .cf-panel{border:1px solid var(--divider-color,#e0e5de);border-radius:14px;padding:14px;margin:15px 0}
     .cf-tools{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.cf-btn{background:var(--secondary-background-color,#eff2ee);border:1px solid var(--divider-color,#dbe2db);color:var(--primary-text-color,#18221c);padding:9px 12px;border-radius:12px;font:inherit;cursor:pointer}
     .cf-btn:disabled{opacity:.4;cursor:not-allowed}.cf-btn.danger{color:var(--error-color,#bd4b42)}
-    .cf-btn.cf-remove{display:flex;align-items:center;justify-content:center;width:36px;height:36px;padding:0;border:1px solid var(--divider-color,#dfe5df);border-radius:50%;font-size:20px}
+    .cf-btn.cf-remove{display:flex;align-items:center;justify-content:center;flex:none;width:36px;height:36px;padding:0;border:1px solid var(--divider-color,#dfe5df);border-radius:50%;background:var(--secondary-background-color,#eef1ef);color:var(--secondary-text-color,#57655c);line-height:0}
+    .cf-remove ha-icon{display:block;width:18px;height:18px;--mdc-icon-size:18px}
     .cf-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid var(--divider-color,#e0e5de)}
     .cf-itemtext{flex:1;min-width:0;overflow-wrap:anywhere;font-size:13px}.cf-id{font-size:11px;color:var(--secondary-text-color,#55665a);margin-top:3px}
     ha-selector{display:block;width:100%;--mdc-theme-primary:var(--edera-emerald-color,#0E6B52)}.cf-fallback{display:none}.cf-no-native .cf-fallback{display:block}
@@ -215,7 +222,7 @@
     }
     _state(entity) { return this._hass?.states?.[entity]; }
     _ready(state) {
-      return !!state && ['open', 'closed', 'opening', 'closing'].includes(state.state);
+      return !!state && typeof state.state === 'string' && state.state !== 'unavailable';
     }
 
     _renderCover(item, placeholder = false) {
@@ -227,7 +234,11 @@
       const busy = this._pending.has(entity);
       const sliderAvailable = ready && !busy && pos !== null && supported(state, FEATURES.SET_POSITION);
       const isDisabled = feature => !ready || !supported(state, feature) || (busy && feature !== FEATURES.STOP);
-      const message = placeholder ? 'Aggiungi una o più entità cover nell’editor visuale per iniziare.' : (state && ready && pos === null ? 'Posizione non fornita dal dispositivo. Usa i comandi disponibili.' : '');
+      const allCommands = [FEATURES.OPEN, FEATURES.CLOSE, FEATURES.STOP].every(feature => supported(state, feature));
+      const message = placeholder ? 'Aggiungi una o più entità cover nell’editor visuale per iniziare.'
+        : ready && pos === null ? (allCommands
+          ? 'Posizione non fornita dal dispositivo. I comandi Apri, Stop e Chiudi restano disponibili.'
+          : 'Posizione non fornita dal dispositivo. Usa i comandi supportati.') : '';
       const value = pos === null ? '—' : String(pos);
       const error = this._errors.get(entity) || '';
       const shownState = placeholder ? 'Nessuna tapparella configurata' : displayState(state, pos);
@@ -235,7 +246,7 @@
           <div class="cf-eyebrow">${escapeHtml(this._cfg.eyebrow)}</div>
           <div class="cf-header">
             <div class="cf-title">${escapeHtml(title)}<b>.</b></div>
-            <div class="cf-orb" aria-hidden="true"><svg class="cf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 8h16M4 11h16M4 14h16M4 17h16"/></svg></div>
+            <div class="cf-orb" aria-hidden="true"><ha-icon class="cf-icon" icon="${escapeHtml(iconName(item.icon, iconName(state?.attributes?.icon)))}"></ha-icon></div>
           </div>
           <div class="cf-well">
             <div class="cf-hero">
@@ -259,7 +270,7 @@
       if (this._draggingEntity) return;
       this.setAttribute('data-theme', this._resolvedTheme());
       if (this._cfg.entities.length === 0) {
-        this.shadowRoot.innerHTML = `<style>${CARD_CSS}</style><div class="cf-grid">${this._renderCover({ entity: '', name: 'Tapparelle' }, true)}</div>`;
+        this.shadowRoot.innerHTML = `<style>${CARD_CSS}</style><div class="cf-grid">${this._renderCover({ entity: '', name: this._cfg.title || 'Tapparelle' }, true)}</div>`;
         return;
       }
       this.shadowRoot.innerHTML = `<style>${CARD_CSS}</style><div class="cf-grid">${this._cfg.entities.map(item => this._renderCover(item)).join('')}</div>`;
@@ -404,12 +415,14 @@
     _cover(item, index) {
       const name = item.name || this._hass?.states?.[item.entity]?.attributes?.friendly_name || item.entity;
       const open = this._openId === item.entity || (this._openId === null && index === 0);
+      const configuredIcon = iconName(item.icon, iconName(this._hass?.states?.[item.entity]?.attributes?.icon));
       return `<details data-cover="${escapeHtml(item.entity)}" ${open ? 'open' : ''}>
         <summary>${escapeHtml(name)} <span class="cf-small">(${index + 1})</span></summary>
         <div class="cf-detailbody">
           <div class="cf-field"><label class="cf-label" for="cf-name-${index}">Nome visualizzato</label><input id="cf-name-${index}" class="cf-input" data-name="${escapeHtml(item.entity)}" maxlength="70" placeholder="Usa il nome Home Assistant" value="${escapeHtml(item.name)}"></div>
-          <div class="cf-panel"><div class="cf-label">Entità tapparella</div>
-            <div class="cf-item"><div class="cf-itemtext">${escapeHtml(name)}<div class="cf-id">${escapeHtml(item.entity)}</div></div><button type="button" class="cf-btn cf-remove danger" data-remove="${escapeHtml(item.entity)}" aria-label="Rimuovi ${escapeHtml(name)}" title="Rimuovi">×</button></div>
+          <div class="cf-field"><div class="cf-label">Icona MDI</div><div data-icon-slot="${escapeHtml(item.entity)}"></div><div class="cf-fallback"><input class="cf-input" data-icon="${escapeHtml(item.entity)}" value="${escapeHtml(configuredIcon)}" placeholder="mdi:window-shutter"></div></div>
+          <div class="cf-panel"><div class="cf-label">Entità tapparella (1)</div>
+            <div class="cf-item"><div class="cf-itemtext">${escapeHtml(name)}<div class="cf-id">${escapeHtml(item.entity)}</div></div><button type="button" class="cf-btn cf-remove" data-remove="${escapeHtml(item.entity)}" aria-label="Rimuovi ${escapeHtml(name)}" title="Rimuovi"><ha-icon icon="mdi:close"></ha-icon></button></div>
           </div>
           <div class="cf-tools"><button type="button" class="cf-btn" data-move="${escapeHtml(item.entity)}" data-step="-1" ${index === 0 ? 'disabled' : ''}>↑ Su</button>
           <button type="button" class="cf-btn" data-move="${escapeHtml(item.entity)}" data-step="1" ${index === this._cfg.entities.length - 1 ? 'disabled' : ''}>↓ Giù</button></div>
@@ -426,8 +439,9 @@
           <div class="cf-small">Cerca e seleziona un'entità cover di Home Assistant</div><div data-entity-slot></div>
           <div class="cf-fallback"><input class="cf-input" data-add type="text" placeholder="cover.nome_tapparella" spellcheck="false"></div>
         </div>`;
-      if (this._tab === 'aspetto') body = `<div class="cf-heading">Aspetto Edera</div><div class="cf-desc">Personalizza la piccola intestazione e il tema della card. Il layout della tapparella mantiene il design Cover Flow.</div>
+      if (this._tab === 'aspetto') body = `<div class="cf-heading">Aspetto Edera</div><div class="cf-desc">Stessa tipografia, spaziature e selezione del tema delle altre card Edera. Il nome di ogni tapparella si modifica nella scheda Tapparelle.</div>
         <div class="cf-field"><label class="cf-label" for="cf-eyebrow">Intestazione superiore</label><input id="cf-eyebrow" class="cf-input" data-appearance="eyebrow" maxlength="60" value="${escapeHtml(this._cfg.eyebrow)}"></div>
+        <div class="cf-field"><label class="cf-label" for="cf-title">Titolo</label><input id="cf-title" class="cf-input" data-appearance="title" maxlength="70" value="${escapeHtml(this._cfg.title)}"></div>
         <div class="cf-field"><label class="cf-label" for="cf-theme">Tema</label>
           <select id="cf-theme" class="cf-input cf-select" data-appearance="theme"><option value="auto" ${this._cfg.theme === 'auto' ? 'selected' : ''}>Automatico (Home Assistant)</option><option value="light" ${this._cfg.theme === 'light' ? 'selected' : ''}>Light Edera</option><option value="dark" ${this._cfg.theme === 'dark' ? 'selected' : ''}>Graphite Dark Edera</option></select></div>`;
       if (this._tab === 'avanzate') body = `<div class="cf-heading">Compatibilità e comandi</div>
@@ -437,6 +451,22 @@
       const editor = this.shadowRoot.querySelector('.cf-editor');
       const native = !!customElements.get('ha-selector');
       editor.classList.toggle('cf-no-native', !native);
+      if (native) this.shadowRoot.querySelectorAll('[data-icon-slot]').forEach(iconSlot => {
+        const id = iconSlot.dataset.iconSlot;
+        const item = this._cfg.entities.find(entry => entry.entity === id);
+        if (!item) return;
+        const selector = document.createElement('ha-selector');
+        selector.hass = this._hass;
+        selector.selector = { icon: {} };
+        selector.value = iconName(item.icon, iconName(this._hass?.states?.[id]?.attributes?.icon));
+        selector.addEventListener('value-changed', event => {
+          event.stopPropagation();
+          const icon = iconName(event.detail?.value);
+          this._openId = id;
+          this._save({ entities: this._cfg.entities.map(entry => entry.entity === id ? { ...entry, icon } : entry) });
+        });
+        iconSlot.appendChild(selector);
+      });
       const slot = this.shadowRoot.querySelector('[data-entity-slot]');
       if (native && slot && this._cfg.entities.length < MAX_COVERS) {
         const selector = document.createElement('ha-selector');
@@ -480,9 +510,16 @@
         this._save({ entities });
         return;
       }
+      if (input.dataset.icon !== undefined) {
+        const id = input.dataset.icon;
+        const icon = iconName(input.value);
+        this._openId = id;
+        this._save({ entities: this._cfg.entities.map(item => item.entity === id ? { ...item, icon } : item) });
+        return;
+      }
       if (input.dataset.appearance !== undefined) {
         const key = input.dataset.appearance;
-        if (key === 'eyebrow' || key === 'theme') this._save({ [key]: input.value });
+        if (key === 'eyebrow' || key === 'theme' || key === 'title') this._save({ [key]: input.value });
       }
     }
   }
