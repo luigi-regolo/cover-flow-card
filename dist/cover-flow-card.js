@@ -79,31 +79,31 @@
 
   const CARD_CSS = `
     :host{display:block;min-width:0;container-type:inline-size;color:var(--cf-text);font-family:var(--ha-font-family-body,Roboto,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif);font-size:14px}
-    :host([data-theme="light"]){--cf-bg:#ffffff;--cf-surface:#f1f3ef;--cf-text:#19221e;--cf-muted:#68716c;--cf-line:#e3e7e2;--cf-graphic:#d5e9de;--cf-slat:#d3dbd5;--cf-slat-edge:#9ea9a1;--cf-ctrl:#fff}
-    :host([data-theme="dark"]){--cf-bg:#202221;--cf-surface:#181a19;--cf-text:#f7f5f0;--cf-muted:#c6cac7;--cf-line:#343735;--cf-graphic:#47675e;--cf-slat:#4c5650;--cf-slat-edge:#252d28;--cf-ctrl:#303431}
+    :host([data-theme="light"]){--cf-bg:#fafbf9;--cf-surface:#f0f2ef;--cf-text:#18221c;--cf-muted:#56675c;--cf-line:#e0e5df;--cf-graphic:#d5e9de;--cf-slat:#d3dbd5;--cf-slat-edge:#9ea9a1;--cf-ctrl:#fff}
+    :host([data-theme="dark"]){--cf-bg:#101211;--cf-surface:#191c1a;--cf-text:#f5f7f4;--cf-muted:#bbc5bd;--cf-line:#2b302c;--cf-graphic:#47675e;--cf-slat:#4c5650;--cf-slat-edge:#252d28;--cf-ctrl:#282b29}
     :host{--cf-accent:var(--edera-emerald-color,${EMERALD})}
     *,*::before,*::after{box-sizing:border-box}
-    .cf-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr));gap:12px;align-items:start;min-width:0}
-    .cf-cell{container-type:inline-size;min-width:0;max-width:410px}
-    .cf-shell{border:1px solid var(--cf-line);border-radius:26px;background:var(--cf-bg);padding:17px;min-width:0;overflow:hidden}
-    .cf-eyebrow{font-size:10px;font-weight:750;letter-spacing:1.5px;color:var(--cf-muted);line-height:1.3;text-transform:uppercase;margin:1px 0 7px}
-    .cf-header{display:flex;justify-content:space-between;align-items:center;gap:11px;margin-bottom:15px}
-    .cf-title{font-size:23px;line-height:1.2;letter-spacing:-.6px;font-weight:760;min-width:0;overflow-wrap:anywhere}
+    .cf-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,370px),1fr));gap:12px;align-items:start;min-width:0}
+    .cf-cell{container-type:inline-size;min-width:0;width:100%}
+    .cf-shell{border:1px solid var(--cf-line);border-radius:26px;background:var(--cf-bg);padding:21px;min-width:0;overflow:hidden}
+    .cf-eyebrow{font-size:10px;font-weight:750;letter-spacing:1.7px;color:var(--cf-muted);line-height:1.3;text-transform:uppercase;margin:1px 0 9px}
+    .cf-header{display:flex;justify-content:space-between;align-items:center;gap:11px;margin-bottom:20px}
+    .cf-title{font-size:25px;line-height:1.14;letter-spacing:-.7px;font-weight:780;min-width:0;overflow-wrap:anywhere}
     .cf-title b{color:var(--cf-accent);font:inherit}
-    .cf-orb{display:grid;place-items:center;flex:none;width:42px;height:42px;border-radius:50%;background:var(--cf-surface)}
+    .cf-orb{display:grid;place-items:center;flex:none;width:47px;height:47px;border-radius:50%;background:var(--cf-surface)}
     .cf-icon{display:block;width:22px;height:22px}
-    .cf-well{border-radius:20px;background:var(--cf-surface);padding:15px;min-width:0}
-    .cf-hero{display:flex;align-items:center;gap:19px;min-height:121px}
-    .cf-window{position:relative;width:92px;height:118px;flex:none;overflow:hidden;border:5px solid var(--cf-bg);border-radius:11px;background:linear-gradient(155deg,#eef4e8 0%,var(--cf-graphic) 100%);box-shadow:0 1px 3px #00000010}
+    .cf-well{border-radius:24px;background:var(--cf-surface);padding:19px;min-width:0}
+    .cf-hero{display:flex;align-items:center;gap:24px;min-height:152px}
+    .cf-window{position:relative;width:116px;height:147px;flex:none;overflow:hidden;border:5px solid var(--cf-bg);border-radius:13px;background:linear-gradient(155deg,#eef4e8 0%,var(--cf-graphic) 100%);box-shadow:0 1px 3px #00000010}
     .cf-window:after{content:"";position:absolute;left:50%;bottom:0;width:1px;height:53%;background:#647d7029}
     .cf-shade{position:absolute;z-index:1;top:0;left:0;right:0;height:var(--cf-closed,38%);background:repeating-linear-gradient(to bottom,var(--cf-slat) 0px,var(--cf-slat) 8px,var(--cf-slat-edge) 9px,var(--cf-slat) 11px);box-shadow:0 3px 7px #1524192b;transition:height 130ms ease}
     .cf-window.unknown{background:var(--cf-line)}.cf-window.unknown .cf-shade{height:0!important}
     .cf-window-bottom{position:absolute;bottom:0;left:0;right:0;height:4px;background:#9db1a2}
-    .cf-metric{min-width:0;flex:1}.cf-metric-label{display:block;font-weight:720;letter-spacing:1.2px;color:var(--cf-muted);font-size:10px;margin-bottom:4px}
-    .cf-value{font-size:44px;font-weight:770;line-height:1.12;letter-spacing:-1.8px;font-variant-numeric:tabular-nums;white-space:nowrap}
+    .cf-metric{min-width:0;flex:1}.cf-metric-label{display:block;font-weight:720;letter-spacing:1.2px;color:var(--cf-muted);font-size:12px;margin-bottom:5px}
+    .cf-value{font-size:52px;font-weight:770;line-height:1.12;letter-spacing:-1.8px;font-variant-numeric:tabular-nums;white-space:nowrap}
     .cf-value .cf-percent{font-size:23px;color:var(--cf-accent);margin-left:2px}
-    .cf-state{font-size:11px;color:var(--cf-muted);line-height:1.4;margin-top:5px;overflow-wrap:anywhere;min-height:16px}
-    .cf-slider{display:block;appearance:none;-webkit-appearance:none;width:100%;height:28px;background:transparent;cursor:pointer;margin:11px 0 0;accent-color:var(--cf-accent);touch-action:none}
+    .cf-state{font-size:12px;color:var(--cf-muted);line-height:1.4;margin-top:5px;overflow-wrap:anywhere;min-height:16px}
+    .cf-slider{display:block;appearance:none;-webkit-appearance:none;width:100%;height:30px;background:transparent;cursor:pointer;margin:17px 0 0;accent-color:var(--cf-accent);touch-action:none}
     .cf-slider::-webkit-slider-runnable-track{height:7px;border-radius:20px;background:linear-gradient(to right,var(--cf-accent) 0%,var(--cf-accent) var(--cf-progress,0%),var(--cf-line) var(--cf-progress,0%),var(--cf-line) 100%)}
     .cf-slider::-moz-range-track{height:7px;border-radius:20px;background:var(--cf-line)}
     .cf-slider::-moz-range-progress{height:7px;border-radius:20px;background:var(--cf-accent)}
@@ -112,15 +112,15 @@
     .cf-slider:disabled{cursor:not-allowed;opacity:.45}
     .cf-slider:focus-visible,.cf-actions button:focus-visible{outline:2px solid var(--cf-accent);outline-offset:2px}
     .cf-ends{display:flex;justify-content:space-between;gap:8px;color:var(--cf-muted);font-size:10px;line-height:1.3;margin-top:2px}
-    .cf-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px}
-    .cf-actions button{appearance:none;font:inherit;font-size:12px;font-weight:680;display:flex;gap:7px;align-items:center;justify-content:center;min-width:0;min-height:46px;border:1px solid var(--cf-line);border-radius:14px;color:var(--cf-text);background:var(--cf-ctrl);cursor:pointer;padding:8px 5px}
+    .cf-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}
+    .cf-actions button{appearance:none;font:inherit;font-size:13px;font-weight:680;display:flex;gap:7px;align-items:center;justify-content:center;min-width:0;min-height:56px;border:1px solid var(--cf-line);border-radius:16px;color:var(--cf-text);background:var(--cf-ctrl);cursor:pointer;padding:8px 5px}
     .cf-actions button[data-action="open"]{background:var(--cf-accent);color:#fff;border-color:var(--cf-accent)}
     .cf-actions button:disabled{opacity:.44;cursor:not-allowed}.cf-actions button:not(:disabled):active{transform:scale(.98)}
     .cf-actions svg{width:16px;height:16px;flex:none}
     .cf-message{margin-top:10px;font-size:11px;color:var(--cf-muted);line-height:1.4}.cf-message.error{color:var(--edera-alert-color,#b85d55)}
     .cf-empty{padding:15px;font-size:12px;line-height:1.5;border-radius:15px;background:var(--cf-surface);color:var(--cf-muted)}
-    @container(max-width:355px){.cf-shell{padding:13px;border-radius:22px}.cf-well{padding:12px}.cf-title{font-size:21px}.cf-hero{gap:13px}.cf-window{width:79px;height:105px}.cf-value{font-size:38px}.cf-actions{gap:6px}.cf-actions button{gap:5px}}
-    @container(max-width:275px){.cf-hero{gap:9px}.cf-window{width:65px;height:93px}.cf-title{font-size:19px}.cf-value{font-size:33px}.cf-actions button{font-size:11px;padding:6px 3px}}
+    @container(max-width:410px){.cf-shell{padding:15px;border-radius:24px}.cf-well{padding:14px}.cf-title{font-size:22px}.cf-hero{gap:14px;min-height:118px}.cf-window{width:86px;height:116px}.cf-value{font-size:41px}.cf-actions{gap:7px}.cf-actions button{gap:5px;min-height:48px;font-size:12px}}
+    @container(max-width:295px){.cf-hero{gap:9px;min-height:96px}.cf-window{width:66px;height:94px}.cf-title{font-size:19px}.cf-value{font-size:33px}.cf-actions button{font-size:11px;padding:6px 3px}}
     @media(prefers-reduced-motion:reduce){.cf-shade{transition:none}}
   `;
 
@@ -218,7 +218,7 @@
       return !!state && ['open', 'closed', 'opening', 'closing'].includes(state.state);
     }
 
-    _renderCover(item) {
+    _renderCover(item, placeholder = false) {
       const entity = item.entity;
       const state = this._state(entity);
       const ready = this._ready(state);
@@ -227,9 +227,10 @@
       const busy = this._pending.has(entity);
       const sliderAvailable = ready && !busy && pos !== null && supported(state, FEATURES.SET_POSITION);
       const isDisabled = feature => !ready || !supported(state, feature) || (busy && feature !== FEATURES.STOP);
-      const message = state && ready && pos === null ? 'Posizione non fornita dal dispositivo. Usa i comandi disponibili.' : '';
+      const message = placeholder ? 'Aggiungi una o più entità cover nell’editor visuale per iniziare.' : (state && ready && pos === null ? 'Posizione non fornita dal dispositivo. Usa i comandi disponibili.' : '');
       const value = pos === null ? '—' : String(pos);
       const error = this._errors.get(entity) || '';
+      const shownState = placeholder ? 'Nessuna tapparella configurata' : displayState(state, pos);
       return `<div class="cf-cell"><section class="cf-shell" data-entity="${escapeHtml(entity)}" aria-label="Controllo tapparella ${escapeHtml(title)}">
           <div class="cf-eyebrow">${escapeHtml(this._cfg.eyebrow)}</div>
           <div class="cf-header">
@@ -239,7 +240,7 @@
           <div class="cf-well">
             <div class="cf-hero">
               <div class="cf-window${pos === null ? ' unknown' : ''}" style="--cf-closed:${pos === null ? 0 : 100 - pos}%" aria-hidden="true"><div class="cf-shade"></div><div class="cf-window-bottom"></div></div>
-              <div class="cf-metric"><span class="cf-metric-label">APERTURA</span><div class="cf-value"><span data-value>${value}</span>${pos === null ? '' : '<span class="cf-percent">%</span>'}</div><div class="cf-state" data-state role="status">${escapeHtml(displayState(state, pos))}</div></div>
+              <div class="cf-metric"><span class="cf-metric-label">APERTURA</span><div class="cf-value"><span data-value>${value}</span>${pos === null ? '' : '<span class="cf-percent">%</span>'}</div><div class="cf-state" data-state role="status">${escapeHtml(shownState)}</div></div>
             </div>
             <input class="cf-slider" type="range" min="0" max="100" step="1" value="${pos ?? 0}" style="--cf-progress:${pos ?? 0}%" aria-label="Imposta apertura ${escapeHtml(title)}" ${sliderAvailable ? '' : 'disabled'}>
             <div class="cf-ends"><span>Chiusa · 0%</span><span>Aperta · 100%</span></div>
@@ -258,7 +259,7 @@
       if (this._draggingEntity) return;
       this.setAttribute('data-theme', this._resolvedTheme());
       if (this._cfg.entities.length === 0) {
-        this.shadowRoot.innerHTML = `<style>${CARD_CSS}</style><div class="cf-shell"><div class="cf-eyebrow">COVER FLOW CARD</div><div class="cf-title">Tapparelle<b>.</b></div><p class="cf-empty">Aggiungi una o più entità cover nell'editor visuale per iniziare.</p></div>`;
+        this.shadowRoot.innerHTML = `<style>${CARD_CSS}</style><div class="cf-grid">${this._renderCover({ entity: '', name: 'Tapparelle' }, true)}</div>`;
         return;
       }
       this.shadowRoot.innerHTML = `<style>${CARD_CSS}</style><div class="cf-grid">${this._cfg.entities.map(item => this._renderCover(item)).join('')}</div>`;
@@ -382,7 +383,7 @@
       try { this._cfg = normalizeConfig({ ...this._cfg, ...changes }); }
       catch (error) { this._notice = error.message; this._render(); return; }
       this.dispatchEvent(new CustomEvent('config-changed', {
-        detail: { config: { ...this._cfg, entities: this._cfg.entities.map(item => ({ ...item })) } },
+        detail: { config: { type: 'custom:cover-flow-card', ...this._cfg, entities: this._cfg.entities.map(item => ({ ...item })) } },
         bubbles: true, composed: true
       }));
       this._render();
