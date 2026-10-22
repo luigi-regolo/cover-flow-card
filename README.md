@@ -9,18 +9,22 @@
 
 **Cover Flow Card** is a custom Home Assistant dashboard card for controlling multiple cover entities through an elegant, minimalist, and responsive interface inspired by Edera Light and Graphite Dark.
 
-Each cover has an individual position slider, animated shutter visualization, opening percentage, and dedicated Open, Stop, and Close controls.
+Each cover has an individual position slider, graphical shutter visualization, opening percentage when available, and dedicated Open, Stop, and Close controls.
 
 The card uses existing Home Assistant cover entities and requires no dedicated account, subscription, paid API, or external JavaScript library.
+
+## Preview
+
+![Cover Flow Card Preview](assets/preview-main.png)
 
 ## Features
 
 - **Multiple covers:** Manage up to 24 cover entities within a single card.
 - **Independent controls:** Open, stop, and close each supported cover individually.
 - **Position slider:** Set the desired opening percentage from 0% to 100% when supported.
-- **Dynamic shutter visualization:** Display the reported opening position through a graphical shutter representation.
-- **Live status:** Display opening, closing, open, closed, unknown, and unavailable states.
-- **Capability-aware controls:** Enable commands only when supported by the selected entity.
+- **Dynamic shutter visualization:** Reflect the opening position reported by the device.
+- **Device states:** Display available position and movement information without inventing values for unknown positions.
+- **Capability-aware controls:** Enable only commands supported by the selected entity, including when the position is unknown.
 - **Visual configuration:** Add, rename, reorder, and remove covers using the Home Assistant card editor.
 - **Responsive layout:** Adaptive grid for smartphones, tablets, and desktop dashboards.
 - **Edera appearance:** Automatic, Light, and Graphite Dark display modes.
@@ -56,7 +60,10 @@ Position percentages are displayed only when provided by the cover entity. Unsup
 Open a dashboard in edit mode, add **Cover Flow Card**, and configure the available options:
 
 - **Covers:** Select cover entities, customize their displayed names, and reorder or remove them.
-- **Appearance:** Customize the upper heading and choose Automatic, Light, or Graphite Dark mode.
+- **Appearance:** Customize the title, upper heading, and choose Automatic, Light, or Graphite Dark mode.
+- **Advanced:** Review information about supported cover commands and position control.
+
+For a single cover, a customized card title can be used unless an individual cover name is configured. With multiple covers, each item displays its configured name or Home Assistant friendly name.
 
 The editor uses the native Home Assistant entity selector when available. No YAML is required for normal configuration.
 
