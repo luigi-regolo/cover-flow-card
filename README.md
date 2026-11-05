@@ -1,9 +1,8 @@
 # Cover Flow Card
 
-[![TikTok | Segui](assets/tiktok-segui.svg)](https://www.tiktok.com/@luigi.regolo)
-[![Release](https://img.shields.io/github/v/release/luigi-regolo/cover-flow-card?style=flat-square)](https://github.com/luigi-regolo/cover-flow-card/releases/latest)
+[![HACS Default](https://img.shields.io/badge/HACS-Default-41BDF5?style=flat-square)](https://my.home-assistant.io/redirect/hacs_repository/?owner=luigi-regolo&repository=cover-flow-card&category=plugin)
+[![Release](https://img.shields.io/github/v/release/luigi-regolo/cover-flow-card?label=Release&style=flat-square)](https://github.com/luigi-regolo/cover-flow-card/releases/latest)
 [![License: GPL-3.0-only](https://img.shields.io/badge/license-GPL--3.0--only-blue?style=flat-square)](LICENSE)
-[![HACS Repository](https://img.shields.io/badge/HACS-Repository-41BDF5?style=flat-square)](https://my.home-assistant.io/redirect/hacs_repository/?owner=luigi-regolo&repository=cover-flow-card&category=plugin)
 [![GitHub Stars](https://img.shields.io/github/stars/luigi-regolo/cover-flow-card?style=flat-square)](https://github.com/luigi-regolo/cover-flow-card/stargazers)
 
 ## Overview
@@ -16,7 +15,13 @@ The card uses existing Home Assistant cover entities and requires no dedicated a
 
 ## Preview
 
-![Cover Flow Card Preview](assets/preview-main.png)
+| Light | Dark |
+| --- | --- |
+| ![Cover Flow Card in Light mode](assets/cover-flow-card-light.png) | ![Cover Flow Card in Dark mode](assets/cover-flow-card-dark.png) |
+
+![Cover Flow Card with multiple covers, Dark mode](assets/cover-flow-card-multiple-dark.png)
+
+*Previews use fictional demo data. The interface text is currently in Italian.*
 
 ## Features
 
@@ -34,17 +39,29 @@ Position percentages are displayed only when provided by the cover entity. Unsup
 
 ## Installation
 
-### HACS
+### HACS (Recommended)
+
+Install Cover Flow Card directly from the default HACS catalog.
 
 [![Open Cover Flow Card in HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=luigi-regolo&repository=cover-flow-card&category=plugin)
 
-1. Open HACS in Home Assistant.
-2. Open the three-dot menu and select **Custom repositories**.
-3. Enter `https://github.com/luigi-regolo/cover-flow-card`.
-4. Select **Dashboard** as the repository type and add it.
-5. Open **Cover Flow Card** in HACS and select **Download**.
-6. Reload the Home Assistant dashboard if necessary.
-7. Add **Cover Flow Card** to your dashboard and configure it through the visual editor.
+1. Open **HACS** in Home Assistant.
+2. Search for **Cover Flow Card**.
+3. Select **Cover Flow Card** from the results.
+4. Click **Download** to install the card.
+5. Reload your dashboard if necessary.
+6. Add **Cover Flow Card** to your dashboard and configure it using the visual editor.
+
+To install a specific release, use **Download** or **Redownload** and select the desired version when available.
+
+### Alternative: Custom repository
+
+If you prefer to add the repository manually:
+
+1. Open **HACS** and select **Custom repositories** from the menu.
+2. Enter `https://github.com/luigi-regolo/cover-flow-card`.
+3. Select **Dashboard** as the repository type and add it.
+4. Find **Cover Flow Card** in HACS and download it.
 
 ### Manual installation
 
@@ -93,8 +110,7 @@ The card does not require installation of the Edera theme or additional frontend
 
 ## Releases
 
-Official versions and release notes are available on
-[GitHub Releases](https://github.com/luigi-regolo/cover-flow-card/releases).
+See [GitHub Releases](https://github.com/luigi-regolo/cover-flow-card/releases) for published versions.
 
 ## Copyright & License
 
