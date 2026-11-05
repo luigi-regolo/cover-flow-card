@@ -1,5 +1,5 @@
 /*
- * Cover Flow Card — development version 0 (not a published release)
+ * Cover Flow Card 1.0
  * Copyright (c) 2026 luigi-regolo
  * SPDX-License-Identifier: GPL-3.0-only
  */
