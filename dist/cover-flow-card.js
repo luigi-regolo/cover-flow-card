@@ -1,5 +1,5 @@
 /*
- * Cover Flow Card 1.0
+ * Cover Flow Card 1.1
  * Copyright (c) 2026 luigi-regolo
  * SPDX-License-Identifier: GPL-3.0-only
  */
