@@ -42,7 +42,10 @@
       // Keep the card's public name as the Edera eyebrow; migrate the original default.
       eyebrow: String(config.eyebrow === 'CONTROLLO TAPPARELLA' ? 'COVER FLOW CARD' : (config.eyebrow ?? 'COVER FLOW CARD')).trim().slice(0, 60),
       title: String(config.title ?? 'Tapparelle').trim().slice(0, 70),
-      theme: THEMES.includes(config.theme) ? config.theme : 'auto'
+      theme: THEMES.includes(config.theme) ? config.theme : 'auto',
+      // Both labels are shown unless explicitly set to false, so saved configurations are unchanged.
+      show_eyebrow: config.show_eyebrow !== false,
+      show_title: config.show_title !== false
     };
   }
 
@@ -79,6 +82,9 @@
     ? '<path d="M12 19V5m-6 6 6-6 6 6"/>'
     : '<path d="M12 5v14m-6-6 6 6 6-6"/>';
 
+  // Compact sizing, shared by narrow containers (smartphones) and portrait tablets.
+  const COMPACT_CSS = '.cf-shell{padding:12px;border-radius:20px}.cf-header{margin-bottom:12px}.cf-title{font-size:20px}.cf-well{padding:12px;border-radius:18px}.cf-hero{gap:12px;min-height:0}.cf-window{width:64px;height:84px;border-width:4px}.cf-value{font-size:34px}.cf-value .cf-percent{font-size:18px}.cf-slider{margin-top:10px;height:26px}.cf-ends{display:none}.cf-actions{gap:7px;margin-top:10px}.cf-actions button{gap:5px;min-height:44px;font-size:12px}';
+
   const CARD_CSS = `
     :host{display:block;min-width:0;container-type:inline-size;color:var(--cf-text);font-family:var(--ha-font-family-body,Roboto,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif);font-size:14px}
     :host([data-theme="light"]){--cf-bg:#fafbf9;--cf-surface:#f0f2ef;--cf-text:#18221c;--cf-muted:#56675c;--cf-line:#e0e5df;--cf-graphic:#d5e9de;--cf-slat:#d3dbd5;--cf-slat-edge:#9ea9a1;--cf-ctrl:#fff}
@@ -90,6 +96,7 @@
     .cf-shell{border:1px solid var(--cf-line);border-radius:26px;background:var(--cf-bg);padding:21px;min-width:0;overflow:hidden}
     .cf-header{min-width:0;margin:2px 4px 17px}
     .cf-eyebrow{font-size:10px;font-weight:750;letter-spacing:1.7px;color:var(--cf-muted);line-height:1.1;text-transform:uppercase;margin:0 0 7px}
+    .cf-eyebrow:last-child{margin-bottom:0}
     .cf-title{font-size:25px;line-height:1.14;letter-spacing:-.7px;font-weight:780;min-width:0;overflow-wrap:anywhere}
     .cf-title b{color:var(--cf-accent);font:inherit}
     .cf-well{border-radius:24px;background:var(--cf-surface);padding:19px;min-width:0}
@@ -121,8 +128,9 @@
     .cf-actions svg{width:16px;height:16px;flex:none}
     .cf-message{margin-top:10px;font-size:11px;color:var(--cf-muted);line-height:1.4}.cf-message.error{color:var(--edera-alert-color,#b85d55)}
     .cf-empty{padding:15px;font-size:12px;line-height:1.5;border-radius:15px;background:var(--cf-surface);color:var(--cf-muted)}
-    @container(max-width:410px){.cf-shell{padding:15px;border-radius:24px}.cf-well{padding:14px}.cf-title{font-size:22px}.cf-hero{gap:14px;min-height:118px}.cf-window{width:86px;height:116px}.cf-value{font-size:41px}.cf-actions{gap:7px}.cf-actions button{gap:5px;min-height:48px;font-size:12px}}
-    @container(max-width:295px){.cf-hero{gap:9px;min-height:96px}.cf-window{width:66px;height:94px}.cf-title{font-size:19px}.cf-value{font-size:33px}.cf-actions button{font-size:11px;padding:6px 3px}}
+    @container(max-width:410px){${COMPACT_CSS}}
+    @media(orientation:portrait) and (min-width:600px) and (max-width:1024px){${COMPACT_CSS}}
+    @container(max-width:295px){.cf-hero{gap:9px}.cf-window{width:54px;height:72px}.cf-title{font-size:18px}.cf-value{font-size:28px}.cf-actions button{font-size:11px;padding:6px 3px}}
     @media(prefers-reduced-motion:reduce){.cf-shade{transition:none}}
   `;
 
@@ -143,6 +151,8 @@
     .cf-remove ha-icon{display:block;width:18px;height:18px;--mdc-icon-size:18px}
     .cf-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid var(--divider-color,#e0e5de)}
     .cf-itemtext{flex:1;min-width:0;overflow-wrap:anywhere;font-size:13px}.cf-id{font-size:11px;color:var(--secondary-text-color,#55665a);margin-top:3px}
+    .cf-toggle{display:flex;align-items:center;gap:12px;padding:9px 0;font-size:14px;cursor:pointer}
+    .cf-toggle input{flex:none;width:18px;height:18px;margin:0;accent-color:var(--edera-emerald-color,#0E6B52);cursor:pointer}
     ha-selector{display:block;width:100%;--mdc-theme-primary:var(--edera-emerald-color,#0E6B52)}.cf-fallback{display:none}.cf-no-native .cf-fallback{display:block}
     details{border:1px solid var(--divider-color,#e0e5de);border-radius:14px;margin:12px 0;overflow:hidden}
     summary{cursor:pointer;padding:16px 14px;font-weight:650;list-style:none;font-size:14px;overflow-wrap:anywhere}
@@ -235,8 +245,10 @@
       const value = pos === null ? '—' : String(pos);
       const error = this._errors.get(entity) || '';
       const shownState = placeholder ? 'Nessuna tapparella configurata' : displayState(state, pos);
+      const showHeader = this._cfg.show_eyebrow || this._cfg.show_title;
+      const header = showHeader ? `<header class="cf-header">${this._cfg.show_eyebrow ? `<div class="cf-eyebrow">${escapeHtml(this._cfg.eyebrow)}</div>` : ''}${this._cfg.show_title ? `<div class="cf-title">${escapeHtml(title)}<b>.</b></div>` : ''}</header>` : '';
       return `<div class="cf-cell"><section class="cf-shell" data-entity="${escapeHtml(entity)}" aria-label="Controllo tapparella ${escapeHtml(title)}">
-          <header class="cf-header"><div class="cf-eyebrow">${escapeHtml(this._cfg.eyebrow)}</div><div class="cf-title">${escapeHtml(title)}<b>.</b></div></header>
+          ${header}
           <div class="cf-well">
             <div class="cf-hero">
               <div class="cf-window${pos === null ? ' unknown' : ''}" style="--cf-closed:${pos === null ? 0 : 100 - pos}%" aria-hidden="true"><div class="cf-shade"></div><div class="cf-window-bottom"></div></div>
@@ -427,6 +439,10 @@
           <div class="cf-fallback"><input class="cf-input" data-add type="text" placeholder="cover.nome_tapparella" spellcheck="false"></div>
         </div>`;
       if (this._tab === 'aspetto') body = `<div class="cf-heading">Aspetto Edera</div><div class="cf-desc">Stessa tipografia, spaziature e selezione del tema delle altre card Edera. Il nome di ogni tapparella si modifica nella scheda Tapparelle.</div>
+        <div class="cf-panel">
+          <label class="cf-toggle"><input type="checkbox" data-toggle="show_eyebrow" ${this._cfg.show_eyebrow ? 'checked' : ''}><span>Mostra l'intestazione superiore</span></label>
+          <label class="cf-toggle"><input type="checkbox" data-toggle="show_title" ${this._cfg.show_title ? 'checked' : ''}><span>Mostra il titolo</span></label>
+        </div>
         <div class="cf-field"><label class="cf-label" for="cf-title">Titolo</label><input id="cf-title" class="cf-input" data-appearance="title" maxlength="70" value="${escapeHtml(this._cfg.title)}"></div>
         <div class="cf-field"><label class="cf-label" for="cf-eyebrow">Intestazione superiore</label><input id="cf-eyebrow" class="cf-input" data-appearance="eyebrow" maxlength="60" value="${escapeHtml(this._cfg.eyebrow)}"></div>
         <div class="cf-field"><label class="cf-label" for="cf-theme">Tema</label>
@@ -479,6 +495,11 @@
         const entities = this._cfg.entities.map(item => item.entity === input.dataset.name ? { ...item, name: input.value.trim() } : item);
         this._openId = input.dataset.name;
         this._save({ entities });
+        return;
+      }
+      if (input.dataset.toggle !== undefined) {
+        const key = input.dataset.toggle;
+        if (key === 'show_eyebrow' || key === 'show_title') this._save({ [key]: input.checked });
         return;
       }
       if (input.dataset.appearance !== undefined) {
